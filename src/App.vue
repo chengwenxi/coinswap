@@ -292,16 +292,24 @@
                     return
                 }
 
-                if (inputDenom === 'uni:iris') {
-                    client.tradeIrisForExactTokens(outputDenom, outputAmt).then(data => {
+                let inputDomain = inputDenom.replace('uni:', '')
+                inputDomain = this.main2unitMap[inputDomain]
+                let unitInputDenom = `uni:${inputDomain}`
+
+                let outputDomain = outputDenom.replace('uni:', '')
+                outputDomain = this.main2unitMap[outputDomain]
+                let unitOutputDenom = `uni:${outputDomain}`
+
+                if (inputDenom === 'uni:uiris') {
+                    client.tradeIrisForExactTokens(unitOutputDenom, outputAmt).then(data => {
                         this.swapInput = Token.toFix(data.toNumber() / Math.pow(10, this.decimals[inputDenom]))
                         this.showRate(data.toNumber(), inputDenom, outputAmt, outputDenom)
                     }).catch(e => {
                         window.console.log(e)
                         this.showError(`${e}`)
                     })
-                } else if (outputDenom === 'uni:iris') {
-                    client.tradeTokensForExactIris(inputDenom, outputAmt).then(data => {
+                } else if (outputDenom === 'uni:uiris') {
+                    client.tradeTokensForExactIris(unitInputDenom, outputAmt).then(data => {
                         this.swapInput = Token.toFix(data.toNumber() / Math.pow(10, this.decimals[inputDenom]))
                         this.showRate(data.toNumber(), inputDenom, outputAmt, outputDenom)
                     }).catch(e => {
@@ -335,8 +343,17 @@
                     this.showError('invalid number!')
                     return
                 }
+
+                let inputDomain = inputDenom.replace('uni:', '')
+                inputDomain = this.main2unitMap[inputDomain]
+                let unitInputDenom = `uni:${inputDomain}`
+
+                let outputDomain = outputDenom.replace('uni:', '')
+                outputDomain = this.main2unitMap[outputDomain]
+                let unitOutputDenom = `uni:${outputDomain}`
+
                 if (inputDenom === 'uni:iris') {
-                    client.tradeExactIrisForTokens(outputDenom, inputAmt).then(data => {
+                    client.tradeExactIrisForTokens(unitOutputDenom, inputAmt).then(data => {
                         this.swapOutput = Token.toFix(data.toNumber() / Math.pow(10, this.decimals[outputDenom]))
                         this.showRate(inputAmt, inputDenom, data.toNumber(), outputDenom)
                     }).catch(e => {
@@ -344,7 +361,7 @@
                         this.showError(`${e}`)
                     })
                 } else if (outputDenom === 'uni:iris') {
-                    client.tradeExactTokensForIris(inputDenom, inputAmt).then(data => {
+                    client.tradeExactTokensForIris(unitInputDenom, inputAmt).then(data => {
                         this.swapOutput = Token.toFix(data.toNumber() / Math.pow(10, this.decimals[outputDenom]))
                         this.showRate(inputAmt, inputDenom, data.toNumber(), outputDenom)
                     }).catch(e => {
