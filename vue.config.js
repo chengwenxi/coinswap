@@ -1,15 +1,15 @@
 module.exports = {
     devServer: {
-        https: true,
+        https: false,
         port: 8081,
-        // proxy: {
-        //     '/api': {
-        //         target: 'http://localhost:8080/api',
-        //         changeOrigin: true,
-        //         // pathRewrite: {
-        //         //     '^/api': ''
-        //         // }
-        //     }
-        // }
+        proxy: {
+            '/api': {
+                target: 'http://10.1.4.179:1317',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api': ''
+                }
+            }
+        }
     }
-};
+}
