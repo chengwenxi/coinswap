@@ -162,10 +162,11 @@ export class Token {
         return domain.toUpperCase()
     }
 
-    static minTokenToUniDenom(denom) {
+    static minTokenToUniDenom(denom, tokens) {
         if (denom === 'uiris') {
             return 'uni:iris'
         }
+        denom = tokens[denom]
         return `uni:${denom}`
     }
 

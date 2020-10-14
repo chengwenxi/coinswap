@@ -153,7 +153,8 @@
         data() {
             return {
                 iris: 'uni:iris',
-                tokens: {},
+                main2unitMap: {},
+                unit2mainMap: {},
                 data: [],
                 filterData: [],
                 decimals: {},
@@ -203,7 +204,8 @@
                             value: uDenom,
                             label: token.symbol.toUpperCase(),
                         }
-                        this.tokens[token.symbol] = token.min_unit
+                        this.main2unitMap[token.symbol] = token.min_unit
+                        this.unit2mainMap[token.min_unit] = token.symbol
                         this.data.push(option)
                         if (!token.scale) {
                             this.decimals[uDenom] = 0
@@ -390,6 +392,9 @@
                 if (denom === 'uni:iris') {
                     return
                 }
+                let domain = denom.replace('uni:', '')
+                domain = this.main2unitMap[domain]
+                denom = `uni:${domain}`
                 client.getReservePool(denom).then(data => {
                     if (!data) {
                         return
@@ -398,8 +403,8 @@
                     let token = data.result.token
                     let iris = data.result.standard
 
-                    let tokenUdenom = Token.minTokenToUniDenom(token.denom)
-                    let irisUdenom = Token.minTokenToUniDenom(iris.denom)
+                    let tokenUdenom = Token.minTokenToUniDenom(token.denom, this.unit2mainMap)
+                    let irisUdenom = Token.minTokenToUniDenom(iris.denom, this.unit2mainMap)
 
                     let tokenMainDenom = Token.getMainDenom(tokenUdenom)
                     let irisMainDenom = Token.getMainDenom(irisUdenom)
@@ -438,6 +443,9 @@
             computeRemoveLiquidity(denom) {
                 this.poolLiquidityDropdown = denom
                 let parent = this
+                let domain = denom.replace('uni:', '')
+                domain = this.main2unitMap[domain]
+                denom = `uni:${domain}`
                 client.getReservePool(denom).then(data => {
                     if (!data.result || data.result.liquidity.amount === '0') {
                         this.showError(`liquidity ${denom} equal zero `)
@@ -447,8 +455,8 @@
                     let token = data.result.token
                     let iris = data.result.standard
 
-                    let tokenUdenom = Token.minTokenToUniDenom(token.denom)
-                    let irisUdenom = Token.minTokenToUniDenom(iris.denom)
+                    let tokenUdenom = Token.minTokenToUniDenom(token.denom, this.unit2mainMap)
+                    let irisUdenom = Token.minTokenToUniDenom(iris.denom, this.unit2mainMap)
                     let tokenMainDenom = Token.getMainDenom(tokenUdenom)
                     let irisMainDenom = Token.getMainDenom(irisUdenom)
 
@@ -482,12 +490,12 @@
             },
             doSwap() {
                 let input = {
-                    denom: Token.uniDenomToMinDenom(this.swapInputDropdown, this.tokens),
+                    denom: Token.uniDenomToMinDenom(this.swapInputDropdown, this.main2unitMap),
                     amount: (this.swapInput * Math.pow(10, this.decimals[this.swapInputDropdown])).toFixed(),
                 }
 
                 let output = {
-                    denom: Token.uniDenomToMinDenom(this.swapOutputDropdown, this.tokens),
+                    denom: Token.uniDenomToMinDenom(this.swapOutputDropdown, this.main2unitMap),
                     amount: (this.swapOutput * Math.pow(10, this.decimals[this.swapOutputDropdown])).toFixed(),
                 }
 
@@ -503,7 +511,7 @@
             doLiquidity() {
                 if (this.methodDesc === AddLiquidity) {
                     let maxToken = {
-                        denom: Token.uniDenomToMinDenom(this.poolTokenDropdown, this.tokens),
+                        denom: Token.uniDenomToMinDenom(this.poolTokenDropdown, this.main2unitMap),
                         amount: String(this.poolTokenAmt * Math.pow(10, this.decimals[this.poolTokenDropdown])),
                     }
 
