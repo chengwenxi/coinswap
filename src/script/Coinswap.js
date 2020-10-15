@@ -8,7 +8,6 @@ const fee = {
 }
 
 const chainID = process.env.VUE_APP_HUB_CHAIN_ID
-const uri = "http://10.1.4.179:26657"
 const slippageRate = 0.01
 const key = crypto.getCrypto("iris").import("DE6991FC61E9A4E61D979BF1988C8621481686FCAB09062961C6D8AEDDBC7E12")
 
@@ -85,12 +84,11 @@ export class CoinSwap {
                 msgs: msgs,
                 mode: "normal",
             }
-            window.console.log(tx)
 
             let builder = crypto.getBuilder("iris");
             let stdTx = builder.buildAndSignTx(tx, key.privateKey);
             let payload = stdTx.getData();
-            return parent.client.sendRawTransaction(uri, payload, {mode: 'commit'})
+            return parent.client.sendRawTransaction(process.env.VUE_APP_RPC_SERVER, payload, {mode: 'commit'})
         }).catch(e => {
             window.console.log(e)
             throw e

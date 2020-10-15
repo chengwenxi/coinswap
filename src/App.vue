@@ -1,7 +1,7 @@
 <template>
     <div id='app'>
         <el-container>
-            <el-header><img style='width: 400px padding-top: 20px' src='./assets/irisnet.png'>
+            <el-header style='height: 120px padding-top: 50px'><img src='./assets/irisnet.png'>
             </el-header>
             <el-main style='margin: 80px auto 0 autowidth: 750px'>
                 <el-tabs type='border-card' @tab-click='tabClick'>
