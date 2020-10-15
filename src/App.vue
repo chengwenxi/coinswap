@@ -547,8 +547,12 @@
                         this.showError(`${e}`)
                     })
                 } else if (this.methodDesc === RemoveLiquidity) {
+                    let denom = this.poolLiquidityDropdown
+                    let domain = denom.replace('uni:', '')
+                    domain = this.main2unitMap[domain]
+                    denom = `uni:${domain}`
                     let withdrawLiquidity = {
-                        denom: `${this.poolLiquidityDropdown}`,
+                        denom: denom,
                         amount: String((this.poolLiquidityAmt * Math.pow(10, this.decimals[this.iris])).toFixed()),
                     }
                     swap.sendRemoveLiquidityTx(withdrawLiquidity, this.deltaIrisAmt, this.deltaTokenAmt).then(result => {
