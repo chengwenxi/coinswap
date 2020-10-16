@@ -9,11 +9,20 @@ const fee = {
 
 const chainID = process.env.VUE_APP_HUB_CHAIN_ID
 const slippageRate = 0.01
-const key = crypto.getCrypto("iris").import("DE6991FC61E9A4E61D979BF1988C8621481686FCAB09062961C6D8AEDDBC7E12")
+let key = {}
 
 export class CoinSwap {
     constructor(client) {
         this.client = client
+    }
+
+    initKey() {
+        let storage = window.localStorage;
+        let keyHex = storage.getItem("iriscoinswap")
+        if (keyHex == null) {
+            return "not found"
+        }
+        key = crypto.getCrypto("iris").import(keyHex)
     }
 
     sendSwapTx(input, output, recipient, isBuyOrder) {
@@ -144,6 +153,19 @@ export class CoinSwap {
 
     async _getAddressAndPubKey() {
         return key
+    }
+
+    importKey(mnemonic) {
+        try {
+            let iriscrypto = crypto.getCrypto("iris")
+            let key = iriscrypto.recover(mnemonic, "english")
+            if (key.privateKey) {
+                let storage = window.localStorage;
+                storage.setItem("iriscoinswap", key.privateKey)
+            }
+        } catch (e) {
+            return e
+        }
     }
 }
 

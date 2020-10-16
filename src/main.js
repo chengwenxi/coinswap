@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import 'element-ui/lib/theme-chalk/index.css'
-import { Container, Header, Main, Tabs, TabPane, Input, Select, Option, Tag, Button } from 'element-ui'
+import { Container, Header, Main, Tabs, TabPane, Input, Select, Option, Tag, Button, Dialog } from 'element-ui'
 
 Vue.component(Container.name, Container)
 Vue.component(Header.name, Header)
@@ -13,6 +13,7 @@ Vue.component(Select.name, Select)
 Vue.component(Option.name, Option)
 Vue.component(Tag.name, Tag)
 Vue.component(Button.name, Button)
+Vue.component(Dialog.name, Dialog)
 Vue.config.productionTip = false
 
 new Vue({

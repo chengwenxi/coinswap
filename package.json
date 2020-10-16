@@ -8,12 +8,16 @@
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint"
     },
+    "browser": {
+        "buffer": "./node_modules/buffer/index.js"
+    },
     "dependencies": {
         "core-js": "^2.6.5",
         "element-ui": "^2.11.1",
         "vue": "^2.6.10",
-        "irisnet-crypto": "git+https://github.com/hangts/irisnet-crypto#feature/RPC",
-        "irishub-sdk-js": "git+https://github.com/SegueII/irishub-sdk-js.git#coinswap"
+        "irisnet-crypto": "git+https://github.com/chengwenxi/irisnet-crypto#vincent-bn",
+        "irishub-sdk-js": "git+https://github.com/SegueII/irishub-sdk-js.git#coinswap",
+        "buffer": "5.2.0"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "^3.10.0",

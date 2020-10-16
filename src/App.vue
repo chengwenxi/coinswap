@@ -1,6 +1,26 @@
 <template>
     <div id='app'>
         <el-container>
+            <el-button type="text" style="position: absolute; right: 80px;" @click="dialogVisible = true">Import Key
+            </el-button>
+            <el-dialog
+                    title="Import Key"
+                    :visible.sync="dialogVisible"
+                    width="80%"
+                    :before-close="handleClose"
+                    :append-to-body="true"
+                    :close-on-click-modal="false">
+                <el-input v-model='mnemonic'
+                          type='text' placeholder='Type your mnemonic phrase'>
+                </el-input>
+                <span slot="footer" class="dialog-footer">
+                    <div class='tab_div' v-if="dialogErrMsg !== ''">
+                        <el-tag :type='dialogTipType'>{{dialogErrMsg}}</el-tag>
+                    </div>
+                    <el-button @click="dialogVisible = false">cancel</el-button>
+                    <el-button type="primary" @click="importKey">import</el-button>
+                </span>
+            </el-dialog>
             <el-header style='height: 120px padding-top: 50px'><img src='./assets/irisnet.png'>
             </el-header>
             <el-main style='margin: 80px auto 0 autowidth: 750px'>
@@ -184,6 +204,10 @@
                 poolLiquidityOutput: '',
                 poolLiquidityDropdown: '',
                 isActive: true,
+                dialogVisible: false,
+                mnemonic: '',
+                dialogErrMsg: '',
+                dialogTipType: 'danger',
             }
         },
         watch: {
@@ -196,6 +220,10 @@
         },
         methods: {
             init() {
+                let err = swap.initKey()
+                if (err) {
+                    this.dialogVisible = true
+                }
                 client.getTokens().then(res => {
                     res.result.forEach(item => {
                         let token = item.value
@@ -226,6 +254,23 @@
                     this.showError('init page error!')
                 })
             },
+            closeShadow() {
+                this.dialogVisible = false;
+            },
+            handleClose(done) {
+                this.mnemonic = ''
+                this.clearDialogError()
+                done();
+            },
+            importKey() {
+                let mnemonic = this.mnemonic
+                let err = swap.importKey(mnemonic)
+                if (err) {
+                    this.showDialogError(err)
+                } else {
+                    this.dialogVisible = false;
+                }
+            },
             tabClick() {
                 this.swapInput = ''
                 this.swapOutput = ''
@@ -239,6 +284,13 @@
             },
             clearError() {
                 this.msg = ''
+            },
+            showDialogError(message) {
+                this.dialogTipType = 'danger'
+                this.dialogErrMsg = message
+            },
+            clearDialogError() {
+                this.dialogErrMsg = ''
             },
             poolTabClick(tab) {
                 this.poolState = ''
