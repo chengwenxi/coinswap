@@ -352,7 +352,7 @@
                 outputDomain = this.main2unitMap[outputDomain]
                 let unitOutputDenom = `uni:${outputDomain}`
 
-                if (inputDenom === 'uni:uiris') {
+                if (inputDenom === 'uni:iris') {
                     client.tradeIrisForExactTokens(unitOutputDenom, outputAmt).then(data => {
                         this.swapInput = Token.toFix(data.toNumber() / Math.pow(10, this.decimals[inputDenom]))
                         this.showRate(data.toNumber(), inputDenom, outputAmt, outputDenom)
@@ -360,7 +360,7 @@
                         window.console.log(e)
                         this.showError(`${e}`)
                     })
-                } else if (outputDenom === 'uni:uiris') {
+                } else if (outputDenom === 'uni:iris') {
                     client.tradeTokensForExactIris(unitInputDenom, outputAmt).then(data => {
                         this.swapInput = Token.toFix(data.toNumber() / Math.pow(10, this.decimals[inputDenom]))
                         this.showRate(data.toNumber(), inputDenom, outputAmt, outputDenom)
@@ -369,7 +369,7 @@
                         this.showError(`${e}`)
                     })
                 } else {
-                    client.tradeTokensForExactTokens(inputDenom, outputDenom, outputAmt).then(data => {
+                    client.tradeTokensForExactTokens(unitInputDenom, unitOutputDenom, outputAmt).then(data => {
                         this.swapInput = Token.toFix(data.toNumber() / Math.pow(10, this.decimals[inputDenom]))
                         this.showRate(data.toNumber(), inputDenom, outputAmt, outputDenom)
                     }).catch(e => {
@@ -421,7 +421,7 @@
                         this.showError(`${e}`)
                     })
                 } else {
-                    client.tradeExactTokensForTokens(inputDenom, outputDenom, inputAmt).then(data => {
+                    client.tradeExactTokensForTokens(unitinputDenom, unitOutputDenom, inputAmt).then(data => {
                         this.swapOutput = Token.toFix(data.toNumber() / Math.pow(10, this.decimals[outputDenom]))
                         this.showRate(inputAmt, inputDenom, data.toNumber(), outputDenom)
                     }).catch(e => {
