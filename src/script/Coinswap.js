@@ -2,7 +2,7 @@ import * as crypto from 'irisnet-crypto'
 
 const fee = {
     amount: [
-        {denom: 'uiris', amount: process.env.VUE_APP_HUB_TX_FEE}
+        {denom: process.env.VUE_APP_HUB_TX_FEE_DENOM, amount: process.env.VUE_APP_HUB_TX_FEE}
     ],
     gasLimit: '200000'
 }
